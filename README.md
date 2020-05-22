@@ -3,7 +3,6 @@
 Vending machine QOL improvements
 
 - Vending machines combine items into stacks internally
-- You can control the amount vended by writing to the "Setting" logic variable
 
 # Releases
 
