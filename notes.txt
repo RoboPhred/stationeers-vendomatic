@@ -1,0 +1,8 @@
+Using VendingMachine.OnCustomImportFinished, first scan for slots of Stackable with same PrefabHash and combine (using OnServer.Combine ?)
+
+Export is done with DeviceImportExport.OnCustomExportFinished.  Need to work before this though to set ExportSlot.Occupant to a new stack of the desired size
+
+Setting ExportSlot is done on VendingMachine.InteractWith, inside the InteractableType.Activate case
+OnServer.MoveToSlot(this.CurrentSlot.Occupant, this.ExportSlot)
+We need to split some off (see Stackable.SplitStack for details on how to do this safely; we need to call OnSplitStack to the new stack).
+We can probably use OnServer.Create(prefabName, slot) to create it directly in the output slot
