@@ -36,27 +36,34 @@ namespace Vendomatic
                 {
                     foreach (Slot slot in __instance.Slots)
                     {
-                        if (!slot.IsInteractable)
+                        if (slot.IsInteractable)
                         {
                             continue;
                         }
 
                         var occupant = slot.Occupant as Stackable;
-                        if (!occupant || occupant.PrefabName != importingStackable.PrefabName)
+                        if (!occupant)
                         {
-                            // Empty or wrong object.
+                            continue;
+                        }
+
+                        if (occupant.PrefabName != importingStackable.PrefabName)
+                        {
                             continue;
                         }
 
                         OnServer.Merge(occupant, importingStackable);
-                        if (importingStackable.Quantity == 0)
+                        if (importingStackable.NetworkQuantity == 0)
                         {
                             // Skip adding the now-empty item if we are empty.
                             // The empty stack was already deleted when its quantity was set to zero.
                             skipNewSlot = true;
                         }
+                        else
+                        {
+                            // It is possible for us to not be empty, in which case a new slot should be started.
+                        }
 
-                        // It is possible for us to not be empty, in which case a new slot should be started.
                         break;
                     }
                 }
