@@ -3,6 +3,8 @@
 Vending machine QOL improvements
 
 - Vending machines combine items into stacks internally
+  - If an input stack goes above the maximum stack size of a stored stack, the stored stack will take as many as possible and a new stack created for the remainder.
+  - Non-stackables are slotted as normal.
 
 # Releases
 
@@ -19,7 +21,5 @@ Requires [BepInEx 5.0.1](https://github.com/BepInEx/BepInEx/releases) or later.
 
 # Multiplayer Support
 
-This mod will work in multiplayer if both the client and the server have the mod.
-The item combining feature should work regardless if the client has the mod installed or not.
-Choosing the amount of items to vend may result in desyncs if the client does not have the mod but the server does.
-This mod works on dedicated servers.
+This mod will work in multiplayer as long as the server has the mod. Clients do not need to install this mod for it to work on the server.
+If a client with this mod installs joins a server without the mod, the mod will have no effect.
