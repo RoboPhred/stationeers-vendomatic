@@ -11,17 +11,17 @@ namespace Vendomatic
 {
 
     [HarmonyPatch(typeof(VendingMachine), "OnCustomImportFinished")]
-    class VendingMachineOnCustomImportFinishedPatch
+    class VendingMachine_OnCustomImportFinishedPatch
     {
         static bool Prefix(VendingMachine __instance)
         {
-            VendingMachineOnCustomImportFinishedPatch.PatchedOnCustomImportFinished(__instance);
+            VendingMachine_OnCustomImportFinishedPatch.PatchedOnCustomImportFinished(__instance);
             return false;
         }
 
         static void PatchedOnCustomImportFinished(VendingMachine __instance)
         {
-            VendingMachineOnCustomImportFinishedPatch.CallBaseCustomImportFinished(__instance);
+            VendingMachine_OnCustomImportFinishedPatch.CallBaseCustomImportFinished(__instance);
 
             if (!GameManager.IsServer)
                 return;

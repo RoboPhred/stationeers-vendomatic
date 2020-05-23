@@ -3,6 +3,8 @@
 Vending machine QOL improvements
 
 - Vending machines combine items into stacks internally
+  - If an input stack goes above the maximum stack size of a stored stack, the stored stack will take as many as possible and a new stack created for the remainder.
+  - Non-stackables are slotted as normal.
 
 # Releases
 
