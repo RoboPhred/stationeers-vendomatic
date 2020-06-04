@@ -21,54 +21,35 @@ namespace Vendomatic
 
         static void PatchedOnCustomImportFinished(VendingMachine __instance)
         {
-            VendingMachineOnCustomImportFinishedPatch.CallBaseCustomImportFinished(__instance);
+            // replaces base.OnCustomImportFinished(), since we can't call a base class from outside
+            __instance.FinishedImporting = true;
 
             if (!GameManager.IsServer)
                 return;
 
-            if (__instance.ImportingThing)
+            //pattern matching also does a null check
+            if (__instance.ImportingThing is Stackable importingStackable)
             {
-                var importing = __instance.ImportingThing;
-                var skipNewSlot = false;
-
-                var importingStackable = __instance.ImportingThing as Stackable;
-                if (importingStackable)
+                foreach (Slot slot in __instance.Slots)
                 {
-                    foreach (Slot slot in __instance.Slots)
+                    //find an internal slot with the same item type that has room
+                    if (!slot.IsInteractable
+                        && slot.Occupant is Stackable occupant
+                        && occupant.PrefabHash == importingStackable.PrefabHash
+                        && occupant.MaxQuantity > occupant.NetworkQuantity)
                     {
-                        if (slot.IsInteractable)
-                        {
-                            continue;
-                        }
-
-                        var occupant = slot.Occupant as Stackable;
-                        if (!occupant)
-                        {
-                            continue;
-                        }
-
-                        if (occupant.PrefabName != importingStackable.PrefabName)
-                        {
-                            continue;
-                        }
-
                         OnServer.Merge(occupant, importingStackable);
-                        if (importingStackable.NetworkQuantity == 0)
-                        {
-                            // Skip adding the now-empty item if we are empty.
-                            // The empty stack was already deleted when its quantity was set to zero.
-                            skipNewSlot = true;
-                        }
-                        else
-                        {
-                            // It is possible for us to not be empty, in which case a new slot should be started.
-                        }
-
-                        break;
                     }
+                    else
+                    {
+                        continue;
+                    }
+                    //fast exit if the import is now empty
+                    if (importingStackable.NetworkQuantity == 0) break;
                 }
 
-                if (!skipNewSlot)
+                // It is possible for us to not be empty, in which case a new slot should be started.
+                if (importingStackable.NetworkQuantity > 0)
                 {
                     foreach (Slot slot in __instance.Slots)
                     {
@@ -87,12 +68,6 @@ namespace Vendomatic
             {
                 __instance.PlanForward();
             }
-        }
-
-        static void CallBaseCustomImportFinished(VendingMachine __instance)
-        {
-            // Cant find a way to do this from harmony, so reimplement it.
-            __instance.FinishedImporting = true;
         }
     }
 }
