@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Vendomatic
 {
-    [BepInPlugin("net.robophreddev.stationeers.Vendomatic", "Vending machine QOL Improvements", "1.0.0.0")]
+    [BepInPlugin("net.robophreddev.stationeers.Vendomatic", "Vending machine QOL Improvements", "1.0.1.0")]
     public class VendomaticPlugin : BaseUnityPlugin
     {
         public static VendomaticPlugin Instance;
